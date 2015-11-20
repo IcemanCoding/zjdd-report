@@ -23,6 +23,7 @@
 
     <mappers>
     	<mapper resource="com/zjdd/report/demo/dao/demoOnlineMapper.xml"/>
+    	<mapper resource="com/zjdd/report/online/dao/dbOnlineMapper.xml"/>
     </mappers>
 
 </configuration> 

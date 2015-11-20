@@ -30,5 +30,10 @@
 		<property name="mapperInterface" value="com.zjdd.report.demo.dao.DemoOnlineDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory_online"></property>
 	</bean>
+	
+	<bean id="dbOnlineDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.online.dao.DBOnlineDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_online"></property>
+	</bean>
 
 </beans>

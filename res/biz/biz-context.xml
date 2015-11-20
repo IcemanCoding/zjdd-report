@@ -20,9 +20,13 @@
 	<import resource="classpath:db/datasource_cms.xml" />
 	<import resource="classpath:db/datasource_data.xml"/>
 	<import resource="classpath:db/datasource_online.xml"/>
+	<import resource="classpath:db/datasource_rpt.xml"/>
 
 	<import resource="classpath:db/mybatis_spring_cms.xml" />
 	<import resource="classpath:db/mybatis_spring_data.xml" />
 	<import resource="classpath:db/mybatis_spring_online.xml" />
+	<import resource="classpath:db/mybatis_spring_rpt.xml" />
+
+	<import resource="classpath:quartz/report-quartz-context.xml"/> 
 
 </beans>
