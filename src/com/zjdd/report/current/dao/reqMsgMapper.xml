@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjdd.report.current.dao.ReqMsgDAO">
+
+	<select id="countFlowByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			yjs_req_msg
+		WHERE
+			DATE_FORMAT( protim, '%Y%m%d' ) = #{accDate}
+	</select>
+	
+	<select id="countValidFlowByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			yjs_req_msg
+		WHERE
+			DATE_FORMAT( protim, '%Y%m%d' ) = #{accDate}
+		AND
+			dtlsts = 13
+	</select>
+
+</mapper>

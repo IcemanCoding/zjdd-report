@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjdd.report.current.dao.SystemRptShopDAO">
+
+	<insert id="insertRptShopInfo" parameterType="rptShopEntity">
+		INSERT INTO system_report_shop (
+			acc_date,
+			shop_count,
+			shop_rate,
+			created_date
+		)
+		VALUES (
+			#{accDate},
+			#{shopCount},
+			#{shopRate},
+			now()
+		)
+	</insert>
+
+</mapper>

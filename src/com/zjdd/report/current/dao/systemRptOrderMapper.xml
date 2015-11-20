@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjdd.report.current.dao.SystemRptOrderDAO">
+
+	<insert id="insertRptOrderInfo" parameterType="rptOrderEntity">
+		INSERT INTO system_report_order (
+			acc_date,
+			order_count,
+			order_amount,
+			order_reward,
+			created_date
+		)
+		VALUES (
+			#{accDate},
+			#{orderCount},
+			#{orderAmount},
+			#{orderReward},
+			now()
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/jee 
+            http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean name="txManager_rpt"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_rpt"></property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<bean id="sqlSessionFactory_rpt" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:orm/sqlMapConfig_rpt.xml"></property>
+		<property name="dataSource" ref="dataSource_rpt" />
+	</bean>
+
+	<bean id="systemParamsDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.SystemParamsDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+	
+	<bean id="systemRptFlowDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.SystemRptFlowDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+	
+	<bean id="systemRptInviteBusinessDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.SystemRptInviteBusinessDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+	
+	<bean id="systemRptOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.SystemRptOrderDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+	
+	<bean id="systemRptShopDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.SystemRptShopDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+	
+	<bean id="reqMsgDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.zjdd.report.current.dao.ReqMsgDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory_rpt"></property>
+	</bean>
+
+</beans>

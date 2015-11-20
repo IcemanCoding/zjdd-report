@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjdd.report.current.dao.SystemRptFlowDAO">
+
+	<insert id="insertRptFlowInfo" parameterType="rptFlowEntity">
+		INSERT INTO system_report_flow (
+			acc_date,
+			flow_in,
+			flow_valid,
+			flow_used,
+			created_date
+		)
+		VALUES (
+			#{accDate},
+			#{flowIn},
+			#{flowValid},
+			#{flowUsed},
+			now()
+		)
+	</insert>
+
+</mapper>
