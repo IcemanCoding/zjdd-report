@@ -12,7 +12,18 @@
 			DATE_FORMAT( protim, '%Y%m%d' ) = #{accDate}
 	</select>
 	
-	<select id="countValidFlowByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="countTotalFlowByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			yjs_req_msg
+		WHERE
+		<![CDATA[ 
+			DATE_FORMAT( protim, '%Y%m%d' ) <= #{accDate}
+		]]>
+	</select>
+	
+	<select id="countVaildFlowByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT
 			count(1)
 		FROM
@@ -22,5 +33,7 @@
 		AND
 			dtlsts = 13
 	</select>
+	
+	
 
 </mapper>

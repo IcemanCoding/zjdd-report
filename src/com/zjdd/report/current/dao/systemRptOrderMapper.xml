@@ -7,17 +7,27 @@
 		INSERT INTO system_report_order (
 			acc_date,
 			order_count,
+			order_total_count,
+			daily_order_count,
 			order_amount,
+			order_total_amount,
+			daily_order_amount,
 			order_reward,
+			order_reward_total,
 			created_date
 		)
 		VALUES (
 			#{accDate},
 			#{orderCount},
+			#{orderTotalCount},
+			#{dailyOrderAmount},
 			#{orderAmount},
+			#{orderTotalAmount},
+			#{dailyOrderAmount},
 			#{orderReward},
+			#{orderRewardTotal},
 			now()
 		)
 	</insert>
-
+	
 </mapper>

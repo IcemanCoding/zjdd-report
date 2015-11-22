@@ -3,43 +3,98 @@
 
 <mapper namespace="com.zjdd.report.online.dao.DBOnlineDAO">
 
-	<select id="countOrderByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="countOrderByDate" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
 		SELECT
-			count(1)
+		ifnull(count(1),0)
 		FROM
-			zj_order
+		zj_order
 		WHERE
-			DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
+		DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
 		AND state = 1
 	</select>
-	
-	<select id="countShopByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+
+	<select id="countTotalOrderByDate" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
 		SELECT
-			COUNT(1)
+		ifnull(count(1),0)
 		FROM
-			zj_store
+		zj_order
 		WHERE
-			DATE_FORMAT(created_at, '%Y%m%d') = #{accDate}
-	</select>
-	
-	<select id="countOrderAmountByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
-		SELECT
-			sum( price )
-		FROM
-			zj_order
-		WHERE
-			DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
+		<![CDATA[ 	
+			DATE_FORMAT(end_at, '%Y%m%d') <= #{accDate}  
+		]]>
 		AND state = 1
 	</select>
-	
-	<select id="countOrderRewardByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+
+	<select id="countShopByDate" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
 		SELECT
-			sum( reward )
+		ifnull(count(1),0)
 		FROM
-			zj_order
+		zj_store
 		WHERE
-			DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
+		DATE_FORMAT(created_at, '%Y%m%d') = #{accDate}
+	</select>
+
+	<select id="countTotalShopByDate" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT
+		ifnull(count(1),0)
+		FROM
+		zj_store
+		WHERE
+		<![CDATA[ 
+		DATE_FORMAT(created_at, '%Y%m%d') <= #{accDate}
+		]]>
+	</select>
+
+	<select id="countOrderAmountByDate" parameterType="java.lang.String"
+		resultType="java.math.BigDecimal">
+		SELECT
+		ifnull(sum( price ), 0.00 )
+		FROM
+		zj_order
+		WHERE
+		DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
 		AND state = 1
 	</select>
-	
+
+	<select id="countTotalOrderAmountByDate" parameterType="java.lang.String"
+		resultType="java.math.BigDecimal">
+		SELECT
+		ifnull(sum( price ), 0.00 )
+		FROM
+		zj_order
+		WHERE
+		<![CDATA[ 
+		DATE_FORMAT(end_at, '%Y%m%d') <= #{accDate}
+		]]>
+		AND state = 1
+	</select>
+
+	<select id="countOrderRewardByDate" parameterType="java.lang.String"
+		resultType="java.math.BigDecimal">
+		SELECT
+		ifnull(sum( reward ),0.00)
+		FROM
+		zj_order
+		WHERE
+		DATE_FORMAT(end_at, '%Y%m%d') = #{accDate}
+		AND state = 1
+	</select>
+
+	<select id="countTotalOrderRewardByDate" parameterType="java.lang.String"
+		resultType="java.math.BigDecimal">
+		SELECT
+		ifnull(sum( reward ),0.00)
+		FROM
+		zj_order
+		WHERE
+		<![CDATA[ 
+		DATE_FORMAT(end_at, '%Y%m%d') <= #{accDate}
+		]]>
+		AND state = 1
+	</select>
+
 </mapper>

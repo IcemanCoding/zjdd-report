@@ -7,8 +7,13 @@ public class SystemReportOrderEntity {
 	
 	private String accDate;
 	private Integer orderCount;
+	private Integer orderTotalCount;
+	private BigDecimal dailyOrderCount;
 	private BigDecimal orderAmount;
+	private BigDecimal orderTotalAmount;
+	private BigDecimal dailyOrderAmount;
 	private BigDecimal orderReward;
+	private BigDecimal orderRewardTotal;
 	private Date createdDate;
 	private Date updatedDate;
 	
@@ -47,6 +52,36 @@ public class SystemReportOrderEntity {
 	}
 	public void setOrderReward( BigDecimal orderReward ) {
 		this.orderReward = orderReward;
+	}
+	public Integer getOrderTotalCount() {
+		return orderTotalCount;
+	}
+	public void setOrderTotalCount( Integer orderTotalCount ) {
+		this.orderTotalCount = orderTotalCount;
+	}
+	public BigDecimal getDailyOrderCount() {
+		return dailyOrderCount;
+	}
+	public void setDailyOrderCount( BigDecimal dailyOrderCount ) {
+		this.dailyOrderCount = dailyOrderCount;
+	}
+	public BigDecimal getOrderTotalAmount() {
+		return orderTotalAmount;
+	}
+	public void setOrderTotalAmount( BigDecimal orderTotalAmount ) {
+		this.orderTotalAmount = orderTotalAmount;
+	}
+	public BigDecimal getDailyOrderAmount() {
+		return dailyOrderAmount;
+	}
+	public void setDailyOrderAmount( BigDecimal dailyOrderAmount ) {
+		this.dailyOrderAmount = dailyOrderAmount;
+	}
+	public BigDecimal getOrderRewardTotal() {
+		return orderRewardTotal;
+	}
+	public void setOrderRewardTotal( BigDecimal orderRewardTotal ) {
+		this.orderRewardTotal = orderRewardTotal;
 	}
 	
 }

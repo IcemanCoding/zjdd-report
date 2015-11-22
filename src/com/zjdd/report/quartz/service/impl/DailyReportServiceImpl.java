@@ -3,10 +3,8 @@ package com.zjdd.report.quartz.service.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +19,7 @@ import com.zjdd.report.current.entity.SystemReportShopEntity;
 import com.zjdd.report.online.dao.DBOnlineDAO;
 import com.zjdd.report.quartz.service.DailyReportService;
 import com.zjdd.report.utils.DateUtils;
+import com.zjdd.report.utils.MathUtils;
 import com.zjdd.report.utils.constants.ConstantsForSystemParams;
 
 public class DailyReportServiceImpl implements DailyReportService {
@@ -61,12 +60,20 @@ public class DailyReportServiceImpl implements DailyReportService {
 		 * 2、取出上次日报生成时间
 		 */
 		String lastDate = systemParamsDao
-				.getParamsValues( ConstantsForSystemParams.DAILY_REPORT_SWITCH );
+				.getParamsValues( ConstantsForSystemParams.LAST_DAILY_REPORT_DATE );
 
 		String accDate = "";
 		try {
 			accDate = DateUtils.addDay( lastDate, 1 );
 		} catch ( ParseException e1 ) {
+		}
+		
+		/*
+		 * 2.1 get current date,  compare to lastDate
+		 */
+		String currentDate = DateUtils.getSysDate( "yyyyMMdd" );
+		if ( currentDate.equals( lastDate ) ) {
+			return;
 		}
 		
 		/*
@@ -76,11 +83,13 @@ public class DailyReportServiceImpl implements DailyReportService {
 			return;
 		}
 		
-		try {
-			String nextDate = DateUtils.addDay( accDate, 1 );
-		} catch ( ParseException e ) {
-			e.printStackTrace();
-		}
+		/*
+		 * 4、update db accDate from system_params
+		 */
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put( "paramKey", ConstantsForSystemParams.LAST_DAILY_REPORT_DATE );
+		params.put( "paramValue", accDate );
+		systemParamsDao.updateParamsValues( params );
 
 	}
 
@@ -93,6 +102,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 			buildOrderReport( accDate );
 
 		} catch ( Exception e ) {
+			e.printStackTrace();
 			return false;
 		}
 
@@ -107,12 +117,23 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		Integer flowIn = reqMsgDao.countFlowByDate( accDate );
 		Integer flowVaild = reqMsgDao.countVaildFlowByDate( accDate );
+		Integer totalFlowIn = reqMsgDao.countTotalFlowByDate( accDate );
+		String operateBeginDate = systemParamsDao.getParamsValues( ConstantsForSystemParams.FLOW_BEGIN_DATE );
+		Integer operateDate = DateUtils.daysBetween( operateBeginDate, accDate );
+//		String dailyFlowInStr = MathUtils.getPercent( operateDate, totalFlowIn );
+		double dailyFlowInStr = totalFlowIn / operateDate;
+		DecimalFormat df1 = new DecimalFormat( "0.00" );
+		String temp = df1.format( dailyFlowInStr );
+		BigDecimal dailyFlowIn = new BigDecimal( temp );
+		
 		FLOW_VALID = flowVaild;
 		Integer flowUsed = 0;
 
 		SystemReportFlowEntity rptFlowEntity = new SystemReportFlowEntity();
 		rptFlowEntity.setAccDate( accDate );
 		rptFlowEntity.setFlowIn( flowIn );
+		rptFlowEntity.setDailyFlowIn( dailyFlowIn );
+		rptFlowEntity.setTotalFlowIn( totalFlowIn );
 		rptFlowEntity.setFlowUsed( flowUsed );
 		rptFlowEntity.setFlowValid( flowVaild );
 
@@ -134,16 +155,17 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		BigDecimal shopRate = BigDecimal.ZERO;
 		if ( FLOW_VALID != 0 ) {
-			DecimalFormat df = new DecimalFormat( "######0.00" );
-			double shopRateTemp = FLOW_VALID / shopCount;
-			String temp = df.format( shopRateTemp );
-			shopRate = new BigDecimal( temp );
+			String shopRateTemp = MathUtils.getPercent( shopCount, FLOW_VALID );
+			shopRate = new BigDecimal( shopRateTemp );
 		}
+		
+		Integer totalShopCount = dbOnlineDao.countTotalShopByDate( accDate );
 
 		SystemReportShopEntity rptShopEntity = new SystemReportShopEntity();
 		rptShopEntity.setAccDate( accDate );
 		rptShopEntity.setShopCount( shopCount );
 		rptShopEntity.setShopRate( shopRate );
+		rptShopEntity.setShopTotalCount( totalShopCount );
 
 		systemRptShopDao.insertRptShopInfo( rptShopEntity );
 
@@ -156,22 +178,57 @@ public class DailyReportServiceImpl implements DailyReportService {
 	 */
 	private Boolean buildOrderReport( String accDate ) {
 
-		/*
-		 * 订单数
-		 */
+		// 订单统计开始日
+		String orderBeginDate = systemParamsDao.getParamsValues( ConstantsForSystemParams.ORDER_BEGIN_DATE );
+		
+		// 当日订单总数
 		Integer orderCount = dbOnlineDao.countOrderByDate( accDate );
+		
+		// 累积订单总数
+		Integer orderTotalCount = dbOnlineDao.countTotalOrderByDate( accDate );
+		
+		// 日均订单数
+		Integer operateDate = DateUtils.daysBetween( orderBeginDate, accDate );
+		double dailyOrderStr = orderTotalCount / operateDate;
+		DecimalFormat df1 = new DecimalFormat( "0.00" );
+		String temp = df1.format( dailyOrderStr );
+		BigDecimal dailyOrder = new BigDecimal( temp );
+		
+		// 当日订单总额
 		BigDecimal orderAmount = dbOnlineDao.countOrderAmountByDate( accDate );
+		
+		// 累积订单总额
+		BigDecimal orderTotalAmount = dbOnlineDao.countTotalOrderAmountByDate( accDate );
+		
+		// 日均订单额
+		double dailyOrderAmountStr = orderTotalAmount.intValue() / operateDate;
+		temp = df1.format( dailyOrderAmountStr );
+		BigDecimal dailyOrderAmount = new BigDecimal( temp );
+		
+		// 当日订单补贴金额
 		BigDecimal orderReward = dbOnlineDao.countOrderRewardByDate( accDate );
+		
+		// 累积订单补贴金额
+		BigDecimal orderRewardTotal = dbOnlineDao.countTotalOrderRewardByDate( accDate );
+		
+		
 		if ( orderReward == null ) {
 			orderReward = BigDecimal.ZERO;
 		}
 
 		SystemReportOrderEntity rptOrderEntity = new SystemReportOrderEntity();
 		rptOrderEntity.setAccDate( accDate );
-		rptOrderEntity.setOrderAmount( orderAmount );
 		rptOrderEntity.setOrderCount( orderCount );
+		rptOrderEntity.setOrderTotalCount( orderTotalCount );
+		rptOrderEntity.setDailyOrderCount( dailyOrder );
+		
+		rptOrderEntity.setOrderAmount( orderAmount );
+		rptOrderEntity.setOrderTotalAmount( orderTotalAmount );
+		rptOrderEntity.setDailyOrderAmount( dailyOrderAmount );
+		
 		rptOrderEntity.setOrderReward( orderReward );
-
+		rptOrderEntity.setOrderRewardTotal( orderRewardTotal );
+		
 		systemRptOrderDao.insertRptOrderInfo( rptOrderEntity );
 
 		return true;

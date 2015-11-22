@@ -1,11 +1,14 @@
 package com.zjdd.report.current.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SystemReportFlowEntity {
 	
 	private String accDate;
 	private Integer flowIn;
+	private Integer totalFlowIn;
+	private BigDecimal dailyFlowIn;
 	private Integer flowValid;
 	private Integer flowUsed;
 	private Date createdDate;
@@ -46,6 +49,18 @@ public class SystemReportFlowEntity {
 	}
 	public void setUpdatedDate( Date updatedDate ) {
 		this.updatedDate = updatedDate;
+	}
+	public Integer getTotalFlowIn() {
+		return totalFlowIn;
+	}
+	public void setTotalFlowIn( Integer totalFlowIn ) {
+		this.totalFlowIn = totalFlowIn;
+	}
+	public BigDecimal getDailyFlowIn() {
+		return dailyFlowIn;
+	}
+	public void setDailyFlowIn( BigDecimal dailyFlowIn ) {
+		this.dailyFlowIn = dailyFlowIn;
 	}
 	
 }

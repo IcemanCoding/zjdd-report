@@ -7,6 +7,7 @@ public class SystemReportShopEntity {
 	
 	private String accDate;
 	private Integer shopCount;
+	private Integer shopTotalCount;
 	private BigDecimal shopRate;
 	private Date createdDate;
 	private Date updatedDate;
@@ -40,6 +41,12 @@ public class SystemReportShopEntity {
 	}
 	public void setUpdatedDate( Date updatedDate ) {
 		this.updatedDate = updatedDate;
+	}
+	public Integer getShopTotalCount() {
+		return shopTotalCount;
+	}
+	public void setShopTotalCount( Integer shopTotalCount ) {
+		this.shopTotalCount = shopTotalCount;
 	}
 
 }

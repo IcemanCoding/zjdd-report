@@ -3,12 +3,21 @@
 
 <mapper namespace="com.zjdd.report.current.dao.SystemParamsDAO">
 
-	<select id="getParamsValues" parameterType="java.lang.String" resultType="java.lang.String">
-		select 
-			param_value 
-		from 
-			system_params 
+	<select id="getParamsValues" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select
+		param_value
+		from
+		system_params
 		where param_key = #{paramKey}
 	</select>
+	<update id="updateParamsValues" parameterType="java.util.Map">
+		update
+		system_params
+		set
+		param_value = #{paramValue}
+		where param_key = #{paramKey}
+
+	</update>
 
 </mapper>
